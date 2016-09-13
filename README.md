@@ -8,7 +8,7 @@ This plugin is free to use, but the copyright is not abandoned. **I HAVE NO RESP
 ##Install
 If you are beginner, I recommend you to use [Fiji](https://fiji.sc/) since it equips all required libraries for SimpltPTA.
 ### Fiji
- 1. Put "SimplePTA_-0.5.0-SNAPSHOT.jar" into Fiji's plugins folder
+ 1. Put "SimplePTA_-0.5.0-SNAPSHOT.jar" in jar folder into Fiji's plugins folder
  2. Start Fiji, then you'll find "PTA2" in plugins menu bar
 
 ### ImageJ
