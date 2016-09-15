@@ -43,6 +43,7 @@ public class SimplePTA extends PlugInFrame {
 	private static ResultDataTable rdt;
 	private static ChartFrame cframe;
 	public static ImageListener listener;
+	public static icMouseAdapter ima;
 	public static int[] selectedlist;
 	public static boolean isTracking = false;
 
@@ -77,14 +78,18 @@ public class SimplePTA extends PlugInFrame {
 			//ip.setThreshold(-808080.0D, ip.getMax(), ImageProcessor.RED_LUT);
 			ic = imp.getCanvas();
 			cal = imp.getCalibration();
-			ic.addMouseListener(new icMouseAdapter(imp, roisize, mw));
+			ic.addMouseListener(ima = new icMouseAdapter(imp, roisize, mw));
 			WindowManager.addWindow(mw);
 			ImagePlus.addImageListener(listener = new ImageListener() {
 
 				@Override
 				public void imageClosed(ImagePlus arg0) {
 					// TODO Auto-generated method stub
-					
+					if (rdt != null) {
+						rdt.dispose();
+						rdt = null;
+					}
+					ic.removeMouseListener(ima);
 				}
 
 				@Override
@@ -92,6 +97,8 @@ public class SimplePTA extends PlugInFrame {
 					imp = arg0;
 					if (mw != null)
 						mw.imp = arg0;
+					ic = imp.getCanvas();
+					ic.addMouseListener(ima = new icMouseAdapter(imp, roisize, mw));
 				}
 
 				@Override
