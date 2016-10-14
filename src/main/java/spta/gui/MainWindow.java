@@ -87,6 +87,7 @@ public class MainWindow extends JFrame {
 		DoTrackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Roi currentRoi = imp.getRoi();
+				IJ.log(currentRoi.toString());
 				int roitype = currentRoi.getType();				
 				if(imp.getDimensions()[2] != 1) {
 					IJ.error("only single channel image");

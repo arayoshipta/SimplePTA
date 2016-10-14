@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ij.*;
+import ij.gui.GenericDialog;
 import ij.gui.ImageCanvas;
 import ij.gui.Overlay;
 import ij.gui.Roi;
@@ -86,8 +87,20 @@ public class SimplePTA extends PlugInFrame {
 				public void imageClosed(ImagePlus arg0) {
 					// TODO Auto-generated method stub
 					if (rdt != null) {
-						rdt.dispose();
-						rdt = null;
+						GenericDialog gd = new GenericDialog("Close table");
+						gd.addMessage("Close Result data table?");
+						gd.enableYesNoCancel();
+						gd.showDialog();
+						if(gd.wasOKed()) {
+							rdt.dispose();
+							rdt = null;
+							if (cframe != null) {
+								cframe.dispose();
+								cframe = null;
+							}
+						} else {
+							return;
+						}
 					}
 					ic.removeMouseListener(ima);
 				}
@@ -96,7 +109,7 @@ public class SimplePTA extends PlugInFrame {
 				public void imageOpened(ImagePlus arg0) {
 					imp = arg0;
 					if (mw != null)
-						mw.imp = arg0;
+						mw.imp = imp;
 					ic = imp.getCanvas();
 					ic.addMouseListener(ima = new icMouseAdapter(imp, roisize, mw));
 				}
@@ -107,6 +120,8 @@ public class SimplePTA extends PlugInFrame {
 						return;
 					}					
 					if(selectedlist.length < 1)
+						return;
+					if(rdt == null)
 						return;
 					if(arg0 != rdt.imp)
 						return;
@@ -151,8 +166,8 @@ public class SimplePTA extends PlugInFrame {
 								if(mw.isNumTrack()) {
 									Roi numroi;
 									int rs = tp.roisize;
-									numroi = new TextRoi((int)tp.tx / cal.pixelWidth + rs / 2 + 2, 
-											(int)tp.ty / cal.pixelHeight - rs / 2, 
+									numroi = new TextRoi((int)(tp.tx / cal.pixelWidth) + rs / 2 + 2, 
+											(int)(tp.ty / cal.pixelHeight) - rs / 2, 
 											String.valueOf(tracklist.indexOf(focusedlist)),
 											new Font("SansSerif", Font.PLAIN, 10));
 									numroi.setStrokeColor(rdt.getDataofColor(tracklist.indexOf(focusedlist)));
@@ -161,7 +176,8 @@ public class SimplePTA extends PlugInFrame {
 								if(mw.isRoiTrack()) {
 									Roi squareroi;
 									int rs = tp.roisize;
-									squareroi = new Roi((int)tp.tx - rs / 2, (int)tp.ty - rs / 2, rs, rs);
+									squareroi = new Roi((int)(tp.tx / cal.pixelWidth) - rs / 2,
+											(int)(tp.ty / cal.pixelHeight) - rs / 2, rs, rs);
 									squareroi.setStrokeColor(rdt.getDataofColor(tracklist.indexOf(focusedlist)));
 									tempol.add(squareroi);
 								}

@@ -92,9 +92,9 @@ public class TrackObject extends Thread implements Measurements{
 			FloatProcessor fip = ip.convertToFloatProcessor();
 			float[] pixVal = (float[])fip.getPixels();
 			is = imp.getStatistics(AREA + CENTROID + CIRCULARITY + MEAN);
-			double xx = is.xCentroid - cal.pixelWidth * (double)roisize / 2.0D;
+			double xx = is.xCentroid - cal.pixelWidth * (double)roisize / 2.0D;  // real coordinate
 			double yy = is.yCentroid - cal.pixelHeight * (double)roisize / 2.0D;
-			int ixx = (int)(xx / cal.pixelWidth);
+			int ixx = (int)(xx / cal.pixelWidth);  // pixel coordinate
 			int iyy = (int)(yy / cal.pixelHeight);
 			double[] inputdata = new double[roisize * roisize];
 			
@@ -133,12 +133,12 @@ public class TrackObject extends Thread implements Measurements{
 				IJ.log("Iteration number: "+opt.getIterations());
 				IJ.log("Evaluation number: "+opt.getEvaluations());
 				*/
-				cx = (double)ixx + optimalValues[1];
-				cy = (double)iyy + optimalValues[2];
+				cx = (double)ixx + optimalValues[1] * cal.pixelWidth;  // real cooridnate
+				cy = (double)iyy + optimalValues[2] * cal.pixelHeight;
 				mean = optimalValues[0];
 				offset = optimalValues[5];
-				sx = optimalValues[3];
-				sy = optimalValues[4];
+				sx = optimalValues[3] * cal.pixelWidth;
+				sy = optimalValues[4] * cal.pixelHeight;
 				itteration = opt.getIterations();
 			} catch (Exception e) {
 				IJ.log(e.toString());
@@ -197,7 +197,7 @@ public class TrackObject extends Thread implements Measurements{
 			else {
 				cx = nexttp.tx; cy = nexttp.ty;
 				Wand wand = new Wand(ip);
-				wand.autoOutline((int)cx, (int)cy, lt, ut);
+				wand.autoOutline((int)(cx / cal.pixelWidth), (int)(cy / cal.pixelHeight), lt, ut);
 				Roi wandRoi = new PolygonRoi(wand.xpoints,wand.ypoints,wand.npoints,Roi.POLYGON);
 				imp.setRoi(wandRoi);
 				return true;
@@ -222,6 +222,7 @@ public class TrackObject extends Thread implements Measurements{
 		// single object tracking
 		List<TrackPoint> track = new ArrayList<TrackPoint>(100);
 		do{
+			SimplePTA.isTracking = true;
 			TrackPoint temptp = detectObject(); // detect object by current roi
 			temptp.preTp = preTp;
 			track.add(temptp);
@@ -260,6 +261,7 @@ public class TrackObject extends Thread implements Measurements{
 		SimplePTA.updateRDT(imp, rdt);
 		imp.updateAndDraw();
 		IJ.log("Tracking ends");
+		SimplePTA.isTracking = false;
 	}
 	
 	public List<TrackPoint> retCandidate() {
@@ -272,10 +274,13 @@ public class TrackObject extends Thread implements Measurements{
 		else
 			ut = 65535;
 		
-		int sx = ((int)cx - searchrange / 2)<0?0:((int)cx - searchrange / 2);
-		int sy = ((int)cy - searchrange / 2)<0?0:((int)cy - searchrange / 2);
-		int ex = ((int)cx + searchrange / 2)>ip.getWidth()?ip.getWidth():((int)cx + searchrange / 2);
-		int ey = ((int)cy + searchrange / 2)>ip.getHeight()?ip.getHeight():((int)cy + searchrange / 2);
+		double ccx = cx / cal.pixelWidth;   // pixel coordinate
+		double ccy = cy / cal.pixelHeight;
+		
+		int sx = ((int)ccx - searchrange / 2)<0?0:((int)ccx - searchrange / 2);
+		int sy = ((int)ccy - searchrange / 2)<0?0:((int)ccy - searchrange / 2);
+		int ex = ((int)ccx + searchrange / 2)>ip.getWidth()?ip.getWidth():((int)ccx + searchrange / 2);
+		int ey = ((int)ccy + searchrange / 2)>ip.getHeight()?ip.getHeight():((int)ccy + searchrange / 2);
 		List<TrackPoint> templist = new ArrayList<TrackPoint>(5);
 		byte[] mask = new byte[searchrange * searchrange];
 		TrackObject to = new TrackObject(imp, mw);
