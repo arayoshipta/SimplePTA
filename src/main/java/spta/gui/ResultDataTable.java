@@ -49,7 +49,7 @@ public class ResultDataTable extends JFrame {
 	private ChartFrame cframe;
 
 	// for Table
-	final static String[] columnNames = {"#", "From", "To", "FrameLength", "Ave. Intensity", "Ave. Velocity", "RunLength", "Check", "Color"};
+	static String[] columnNames = {"<html>#<br>&nbsp;", "From", "To", "FrameLength", "Ave. Intensity", "Ave. Velocity", "RunLength", "Check", "Color"};
 	public Object[][] data;
 	static Color[] comboColors = {Color.cyan,Color.blue,Color.red,Color.yellow,Color.green,Color.magenta,Color.orange,Color.white};
 	static String[] cString = {"Cyan","Blue","Red","Yellow","Green","Magenta","Orange","White"};
@@ -59,12 +59,16 @@ public class ResultDataTable extends JFrame {
 		this.tracklist = tracklist;
 		this.imp = imp;
 		this.rdt = this;
-		setTableObjectData(tracklist, imp);	
+		this.cal = imp.getCalibration();
+		setTableObjectData(tracklist, imp);
+		columnNames[5] = "<html>Ave. Velocity<br>" + "(" + cal.getUnit() + "/" + cal.getTimeUnit() + ")";
+		columnNames[6] = "<html>RunLength<br>" + "(" + cal.getUnit() + ")";
 		new makeTableFrame(this);
 	}
 	
 	public void setTableObjectData(List<List<TrackPoint>> tl, ImagePlus imp) {
 		this.imp = imp;
+		this.cal = imp.getCalibration();
 		int pointnum = 0;
 		data = new Object[tl.size()][9];
 		for(List<TrackPoint> list: tl) {
@@ -80,6 +84,8 @@ public class ResultDataTable extends JFrame {
 			data[pointnum][8] = Color.cyan; // Dafault color as Cyan
 			pointnum++;
 		}
+		columnNames[5] = "<html>Ave. Velocity<br>" + "(" + cal.getUnit() + "/" + cal.getTimeUnit() + ")";
+		columnNames[6] = "<html>RunLength<br>" + "(" + cal.getUnit() + ")";
 	}
 	
 	class makeTableFrame implements ListSelectionListener {
