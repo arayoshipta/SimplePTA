@@ -90,7 +90,7 @@ public class AnalyzeTrack {
 			runLen += length;
 			timeseriesm[j] = (i + track.get(0).frame) * frameint; 
 			velocities[j] = length / frameint;
-			aveVel = aveVel + velocities[j] / frameint;
+			aveVel = aveVel + velocities[j];
 		}
 		if (track.size() > 2) {
 			for(int i = 2, j = 1, k = 0;i < framelength; i++, j++, k++) {
