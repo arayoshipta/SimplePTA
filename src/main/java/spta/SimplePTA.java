@@ -47,6 +47,7 @@ public class SimplePTA extends PlugInFrame {
 	public static icMouseAdapter ima;
 	public static int[] selectedlist;
 	public static boolean isTracking = false;
+	public static Integer lowersize = 5;
 
 	public SimplePTA() {
 		super("PTA");
@@ -108,8 +109,12 @@ public class SimplePTA extends PlugInFrame {
 				@Override
 				public void imageOpened(ImagePlus arg0) {
 					imp = arg0;
-					if (mw != null)
+					if (mw != null) {
 						mw.imp = imp;
+						roisize = (Integer)mw.roisize.getValue();
+						searchrange = (Integer)mw.searchrange.getValue();
+						lowersize = (Integer)mw.lowersize.getValue();
+					}
 					ic = imp.getCanvas();
 					ic.addMouseListener(ima = new icMouseAdapter(imp, roisize, mw));
 				}

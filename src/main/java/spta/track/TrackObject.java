@@ -170,28 +170,25 @@ public class TrackObject extends Thread implements Measurements{
 			wand.autoOutline((int)(cp.tx / cal.pixelWidth), (int)(cp.ty / cal.pixelHeight), lt, ut);
 			Roi wandRoi = new PolygonRoi(wand.xpoints, wand.ypoints, wand.npoints, Roi.POLYGON);
 			imp.setRoi(wandRoi);
+			ImageStatistics is = imp.getStatistics(AREA);
+			IJ.log("imp: " + imp.toString());
+			IJ.log("is: " + is.toString());
+			if (is.area < SimplePTA.lowersize) {
+				IJ.log("Object size is lower than the limit");
+				return false;
+			}
 		} else {
-			IJ.log("search candidate. searchrange = " + searchrange);
 			// find next candidate of objects by scanning
 			List<TrackPoint> templist = retCandidate();
 			// evaluate each trackpoint candidate
 			double score = 10000000.0D;
 			TrackPoint nexttp = null;
-			for(TrackPoint candtp: templist) {
-				double tempscore = TrackPoint.calcDistance(cp, candtp, cal);
-				if (tempscore == 0) {
-					IJ.log("3. search failed");
-					return false;
-				}
-				if (tempscore < score) {
-					score = tempscore;
-					nexttp = candtp;
-				}
-			}
+			if(templist.size() == 1)  // if more than two candidates exists, stop to searching
+				nexttp = templist.get(0); 
+
 			if (nexttp == null) {
-				IJ.log("4. No Candidate");
+				IJ.log("No Candidate");
 				IJ.log(cp.toString());
-				IJ.log("score = " + score);
 				return false;
 			}
 			else {
@@ -292,7 +289,9 @@ public class TrackObject extends Thread implements Measurements{
 					wand.autoOutline(dx, dy, lt, ut);
 					Roi wandRoi = new PolygonRoi(wand.xpoints,wand.ypoints,wand.npoints,Roi.POLYGON);
 					imp.setRoi(wandRoi);
-					templist.add(to.detectObject());
+					ImageStatistics is = imp.getStatistics(AREA);
+					if (is.area >= SimplePTA.lowersize)
+						templist.add(to.detectObject());	// if the objects size is larger than lowersize value, add it as candidate
 					// register mask data
 					for(int mx = sx, bx = 0;mx<ex;mx++, bx++) {
 						for(int my = sy, by = 0;my<ey;my++, by++) {

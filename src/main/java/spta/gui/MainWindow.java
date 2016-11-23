@@ -52,6 +52,7 @@ public class MainWindow extends JFrame {
 	
 	public SpinnerNumberModel roisize;
 	public SpinnerNumberModel searchrange;
+	public SpinnerNumberModel lowersize;
 	JSpinner RoiSize;
 	public int method;
 	public boolean stateOfTrajectory = true;
@@ -168,14 +169,14 @@ public class MainWindow extends JFrame {
 		DetectionParamPanel.setBorder(new TitledBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null),
 				"Detection Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		param_panel.add(DetectionParamPanel);
-		DetectionParamPanel.setLayout(new GridLayout(2, 2, 0, 0));
+		DetectionParamPanel.setLayout(new GridLayout(3, 2, 0, 0));
 		
 		JLabel LabelRoi = new JLabel("Roi Size (pixels)");
 		LabelRoi.setToolTipText("The lenght of the side of square ROI");
 		DetectionParamPanel.add(LabelRoi);
 		
-		roisize = new SpinnerNumberModel(12, 5, 100, 1);
-		RoiSize = new JSpinner(roisize);
+		roisize = new SpinnerNumberModel(12, 5, null, 1);
+		RoiSize = new JSpinner(new SpinnerNumberModel(new Integer(12), new Integer(5), null, new Integer(1)));
 		RoiSize.setToolTipText("The lenght of the side of square ROI (Pixels)");
 		RoiSize.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -188,8 +189,8 @@ public class MainWindow extends JFrame {
 		lblSearchRangepixels.setToolTipText("The length of the side of a square ROI which limits the search range to find next object. ");
 		DetectionParamPanel.add(lblSearchRangepixels);
 		
-		searchrange = new SpinnerNumberModel(30, 5, 200, 1);
-		JSpinner SearchRange = new JSpinner(searchrange);
+		searchrange = new SpinnerNumberModel(30, 1, null, 1);
+		JSpinner SearchRange = new JSpinner(new SpinnerNumberModel(new Integer(30), new Integer(1), null, new Integer(1)));
 		SearchRange.setToolTipText("The length of the side of a square ROI which limits the search range to find next object. ");
 		SearchRange.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
@@ -197,6 +198,25 @@ public class MainWindow extends JFrame {
 			}
 		});
 		DetectionParamPanel.add(SearchRange);
+		
+		JLabel lblLowerSizepixels = new JLabel("Lower size (pixels)");
+		lblLowerSizepixels.setToolTipText("Lower size of objects");
+		
+		DetectionParamPanel.add(lblLowerSizepixels);
+		
+		lowersize = new SpinnerNumberModel(5, 1, null, 1);
+		JSpinner LowerSize = new JSpinner();
+		LowerSize.setModel(new SpinnerNumberModel(new Integer(5), new Integer(1), null, new Integer(1)));
+		LowerSize.setToolTipText("Lower size of objects");
+		LowerSize.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
+				SimplePTA.lowersize = (Integer)lowersize.getValue();
+			}
+			
+		});
+		DetectionParamPanel.add(LowerSize);
 		
 		JPanel AppearancePanel = new JPanel();
 		getContentPane().add(AppearancePanel);
@@ -279,9 +299,39 @@ public class MainWindow extends JFrame {
 			
 		});
 		
-		roisize = new SpinnerNumberModel(12, 5, 50, 1); //
+//		roisize = new SpinnerNumberModel(12, 5, 50, 1); //	
+//		searchrange = new SpinnerNumberModel(30, 5, 100, 1);
+//		lowersize = new SpinnerNumberModel(5, 1, 100, 1);
 		
-		searchrange = new SpinnerNumberModel(30, 5, 100, 1);
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				ResultDataTable rdt = SimplePTA.getRDT();
+				if (rdt != null) {
+					GenericDialog gd = new GenericDialog("Close");
+					gd.addMessage("Do you want to close PTA2?");
+					gd.enableYesNoCancel();
+					gd.showDialog();
+					if(gd.wasCanceled())
+						return;
+					rdt.dispose();
+				}
+				ImagePlus.removeImageListener(SimplePTA.listener);
+				WindowManager.removeWindow(SimplePTA.mw);
+				imp.setOverlay(null);
+				SimplePTA.frame = null;
+				IJ.log("Window closed");
+			}
+			
+//			@Override
+//			public void windowClosed(WindowEvent e) {
+//				ImagePlus.removeImageListener(SimplePTA.listener);
+//				WindowManager.removeWindow(SimplePTA.mw);
+//				imp.setOverlay(null);
+//				SimplePTA.frame = null;
+//				IJ.log("Window closed");
+//			}
+		});
 	}
 	
 	public int retMethod() {
@@ -299,28 +349,5 @@ public class MainWindow extends JFrame {
 	public boolean isNumTrack() {
 		return NumberCheckBox.isSelected();
 	}
-	
-	public class myListener extends WindowAdapter {
-		@Override
-		public void windowClosing(WindowEvent e) {
-			ResultDataTable rdt = SimplePTA.getRDT();
-			if (rdt != null) {
-				GenericDialog gd = new GenericDialog("Close");
-				gd.addMessage("Do you want to close PTA2?");
-				gd.enableYesNoCancel();
-				gd.showDialog();
-				if(gd.wasCanceled())
-					return;
-				rdt.dispose();
-			}
-		}
-		
-		@Override
-		public void windowClosed(WindowEvent e) {
-			ImagePlus.removeImageListener(SimplePTA.listener);
-			WindowManager.removeWindow(SimplePTA.mw);
-			imp.setOverlay(null);
-			SimplePTA.frame = null;
-		}
-	}	
+
 }
