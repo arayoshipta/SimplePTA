@@ -31,8 +31,11 @@ public class icMouseAdapter extends MouseAdapter implements MouseListener, Measu
 		ImageProcessor ip = imp.getProcessor();
 		FloatProcessor fip = ip.convertToFloatProcessor();
 		ImageCanvas ic = imp.getCanvas();
-		Overlay ol = new Overlay();
 		Calibration cal = imp.getCalibration();
+		
+		Overlay ol = imp.getOverlay();
+		if(ol == null) 
+			ol = new Overlay();
 		
 		ol.clear();
 		lt = Math.round(ip.getMinThreshold());
@@ -41,34 +44,29 @@ public class icMouseAdapter extends MouseAdapter implements MouseListener, Measu
 		else
 			ut = 65535;
 		
-		double wdx = ic.offScreenX(e.getX()) / cal.pixelWidth; // to change the xy-cooridnate if the image is zoomed.
-		double wdy = ic.offScreenY(e.getY()) / cal.pixelHeight;		
+		double wdx = ic.offScreenX(e.getX()); // to change the xy-cooridnate if the image is zoomed.
+		double wdy = ic.offScreenY(e.getY()); // e.getX,Y returns pixel coordinates
 		double fval = Float.intBitsToFloat(fip.getPixel((int)wdx, (int)wdy));
 
 		if(ip.getMinThreshold() != -808080.0D && lt <= fval && fval <= ut) { // Is Threshold set ?
 			Wand wand = new Wand(ip);
-			wand.autoOutline((int)wdx, (int)wdy, lt, ut);
+			wand.autoOutline((int)wdx, (int)wdy, lt, ut); // wand get pixel coordinate
 			Roi wandRoi = new PolygonRoi(wand.xpoints,wand.ypoints,wand.npoints,Roi.POLYGON);
 			imp.setRoi(wandRoi);
 			ImageStatistics is = imp.getStatistics(CENTROID+RECT);
-			Line lr1 = new Line(is.xCentroid, is.yCentroid - 20, is.xCentroid, is.yCentroid + 20);
-			Line lr2 = new Line(is.xCentroid - 20, is.yCentroid, is.xCentroid + 20, is.yCentroid);
+			double calcx = is.xCentroid / cal.pixelWidth;
+			double calcy = is.yCentroid / cal.pixelHeight;
+			Line lr1 = new Line(calcx, calcy - 20, calcx, calcy + 20);
+			Line lr2 = new Line(calcx - 20, calcy, calcx + 20, calcy);
 			lr2.setStrokeWidth(2);
 			lr1.setStrokeWidth(2);
 			lr1.setStrokeColor(Color.yellow);
 			lr2.setStrokeColor(Color.yellow);
 			ol.add(lr1);
 			ol.add(lr2);
-			/*
-			double roisize = is.roiHeight > is.roiWidth?is.roiHeight:is.roiWidth; // get bounding box of wand roi
-			roisize = (int)(roisize * 3.0);
-			Roi squareroi = new Roi((int)(is.xCentroid - roisize / 2), (int)(is.yCentroid - roisize / 2),
-							(int)roisize, (int)roisize);
-			squareroi.setStrokeColor(Color.red);
-			ol.add(squareroi);
-			*/
+
 			imp.setOverlay(ol);
-			imp.updateAndDraw();
+			//imp.updateAndDraw();  // no need to updateAndDraw()
 			}
 	}
 }
