@@ -46,8 +46,10 @@ If you are beginner, I recommend you to use [Fiji](https://fiji.sc/) since it eq
 4. If there is a gap between last frame of first track and first frame of second track, simple interpolation will be performed.
 
 #### History
-2016.08.01 version 0.5 was uploaded
-2017.01.12 version 0.7.1 was uploaded 
+
+- 2016.08.01 version 0.5 was uploaded
+- 2017.01.12 version 0.7.1 was uploaded
+
 #### Author information
 Yoshiyuki Arai
 
