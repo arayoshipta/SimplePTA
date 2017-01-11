@@ -57,19 +57,19 @@ public class MainWindow extends JFrame {
 	public int method;
 	public boolean stateOfTrajectory = true;
 
-	public ImagePlus imp;
+	private ImagePlus imp;
 	private JCheckBox AllCheckBox;
 	private JCheckBox ROICheckBox;
 	private JCheckBox NumberCheckBox;
 	
 	TrackObject to;
 	
-	public MainWindow(final ImagePlus imp, final List<List<TrackPoint>> tracklist) {
+	public MainWindow(ImagePlus _imp, final List<List<TrackPoint>> tracklist) {
 		setBounds(new Rectangle(500, 220, 300, 300));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.imp = imp;
+		this.imp = _imp;
 		
-		setTitle("Simple PTA");
+		setTitle("Simple PTA ver.0.7.1");
 		setResizable(false);
 		getContentPane().setLayout(new GridLayout(3, 1, 0, 0));
 		
@@ -88,7 +88,6 @@ public class MainWindow extends JFrame {
 		DoTrackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Roi currentRoi = imp.getRoi();
-				IJ.log(currentRoi.toString());
 				int roitype = currentRoi.getType();				
 				if(imp.getDimensions()[2] != 1) {
 					IJ.error("only single channel image");
@@ -320,7 +319,6 @@ public class MainWindow extends JFrame {
 				WindowManager.removeWindow(SimplePTA.mw);
 				imp.setOverlay(null);
 				SimplePTA.frame = null;
-				IJ.log("Window closed");
 			}
 			
 //			@Override
@@ -348,6 +346,14 @@ public class MainWindow extends JFrame {
 	
 	public boolean isNumTrack() {
 		return NumberCheckBox.isSelected();
+	}
+	
+	public void setImp(ImagePlus imp) {
+		this.imp = imp;
+	}
+	
+	public ImagePlus getImp() {
+		return imp;
 	}
 
 }

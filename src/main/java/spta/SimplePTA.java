@@ -95,6 +95,7 @@ public class SimplePTA extends PlugInFrame {
 						if(gd.wasOKed()) {
 							rdt.dispose();
 							rdt = null;
+							tracklist = null;
 							if (cframe != null) {
 								cframe.dispose();
 								cframe = null;
@@ -110,10 +111,12 @@ public class SimplePTA extends PlugInFrame {
 				public void imageOpened(ImagePlus arg0) {
 					imp = arg0;
 					if (mw != null) {
-						mw.imp = imp;
+						mw.setImp(arg0);
 						roisize = (Integer)mw.roisize.getValue();
 						searchrange = (Integer)mw.searchrange.getValue();
 						lowersize = (Integer)mw.lowersize.getValue();
+						if(rdt == null)
+							tracklist = new ArrayList<List<TrackPoint>>(100);  // allocate only rdt is null
 					}
 					ic = imp.getCanvas();
 					ic.addMouseListener(ima = new icMouseAdapter(imp, roisize, mw));

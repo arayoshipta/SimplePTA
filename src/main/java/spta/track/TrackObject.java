@@ -171,8 +171,6 @@ public class TrackObject extends Thread implements Measurements{
 			Roi wandRoi = new PolygonRoi(wand.xpoints, wand.ypoints, wand.npoints, Roi.POLYGON);
 			imp.setRoi(wandRoi);
 			ImageStatistics is = imp.getStatistics(AREA);
-			IJ.log("imp: " + imp.toString());
-			IJ.log("is: " + is.toString());
 			if (is.area < SimplePTA.lowersize) {
 				IJ.log("Object size is lower than the limit");
 				return false;
@@ -188,7 +186,6 @@ public class TrackObject extends Thread implements Measurements{
 
 			if (nexttp == null) {
 				IJ.log("No Candidate");
-				IJ.log(cp.toString());
 				return false;
 			}
 			else {
