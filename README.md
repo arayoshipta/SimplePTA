@@ -8,8 +8,8 @@ This plugin is free to use, but the copyright is not abandoned. **I HAVE NO RESP
 ##Install
 If you are beginner, I recommend you to use [Fiji](https://fiji.sc/) since it equips all required libraries for SimpltPTA.
 ### Fiji
- 1. Put "SimplePTA_-0.5.0-SNAPSHOT.jar" in jar folder into Fiji's plugins folder
- 2. Start Fiji, then you'll find "PTA2" in plugins menu bar
+ 1. Put "SimplePTA_.jar" in **jar folder** into Fiji's plugins folder
+ 2. Start Fiji, then you'll find "SimplePTA" in plugins menu bar
 
 ### ImageJ
  1. Download additional jar files as follows
@@ -26,7 +26,7 @@ If you are beginner, I recommend you to use [Fiji](https://fiji.sc/) since it eq
 3. Adjust threshold. *This process is required if you want to store **Size** information.*
 4. Choose tracking methods from Main Window. Now I offer "Centroid", "Center of Mass", and "2-Dimensional Gaussian Fitting" 
 5. Click object what you want to track. The cross-target will appear.
-6. Press "Single Track" button to perfomr tracking.
+6. Press "Single Track" button to perform tracking.
 7. After tracking cells, Result table data will appear.
 
 
@@ -46,8 +46,8 @@ If you are beginner, I recommend you to use [Fiji](https://fiji.sc/) since it eq
 4. If there is a gap between last frame of first track and first frame of second track, simple interpolation will be performed.
 
 #### History
-2016.08.01 version 0.5 uploaded to GitHub
-
+2016.08.01 version 0.5 was uploaded
+2017.01.12 version 0.7.1 was uploaded 
 #### Author information
 Yoshiyuki Arai
 
