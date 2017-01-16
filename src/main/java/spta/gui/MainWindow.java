@@ -69,7 +69,7 @@ public class MainWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.imp = _imp;
 		
-		setTitle("Simple PTA ver.0.7.1");
+		setTitle("Simple PTA ver.0.7.2");
 		setResizable(false);
 		getContentPane().setLayout(new GridLayout(3, 1, 0, 0));
 		
@@ -88,6 +88,10 @@ public class MainWindow extends JFrame {
 		DoTrackButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Roi currentRoi = imp.getRoi();
+				if(currentRoi == null) {
+					IJ.error("No object was selected");
+					return;
+				}
 				int roitype = currentRoi.getType();				
 				if(imp.getDimensions()[2] != 1) {
 					IJ.error("only single channel image");
@@ -95,6 +99,7 @@ public class MainWindow extends JFrame {
 				}
 				
 				if(imp.getStackSize() != imp.getNFrames()) {
+					int currentSlice = imp.getSlice();
 					GenericDialog yesnostack = new GenericDialog("Frame or Slice?");
 					yesnostack.addMessage("Total Slice size: " + imp.getNSlices() + " is not equal "
 							+ "to the total stack size: "+ imp.getStackSize() + " ");
@@ -103,6 +108,7 @@ public class MainWindow extends JFrame {
 					yesnostack.showDialog();
 					if(yesnostack.wasOKed()) {
 						imp.setDimensions(1, 1, imp.getStackSize());
+						imp.setT(currentSlice); // move to current slice
 					}
 				}
 				if (roitype == 2 && (imp.getSlice() != imp.getStackSize())) { // i.e Roi is wand

@@ -156,8 +156,12 @@ public class EditTrackAction extends AbstractAction {
 			tracklist.remove(index);
 			rdt.setVisible(false);
 			rdt.dispose(); // Destroy JFrame
-			rdt = new ResultDataTable(tracklist, imp);
-			SimplePTA.updateRDT(imp, rdt);
+			if(tracklist.size()>0) {
+				rdt = new ResultDataTable(tracklist, imp);
+				SimplePTA.updateRDT(imp, rdt);
+			} else {
+				SimplePTA.updateRDT(imp, null); // if there is no track data, then close rdt and set null.
+			}
 		}
 	}
 

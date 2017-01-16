@@ -171,7 +171,7 @@ public class TrackObject extends Thread implements Measurements{
 			Roi wandRoi = new PolygonRoi(wand.xpoints, wand.ypoints, wand.npoints, Roi.POLYGON);
 			imp.setRoi(wandRoi);
 			ImageStatistics is = imp.getStatistics(AREA);
-			if (is.area < SimplePTA.lowersize) {
+			if (is.area / cal.pixelDepth / cal.pixelHeight < SimplePTA.lowersize) { // is.area must be converted to pixel
 				IJ.log("Object size is lower than the limit");
 				return false;
 			}
@@ -287,7 +287,7 @@ public class TrackObject extends Thread implements Measurements{
 					Roi wandRoi = new PolygonRoi(wand.xpoints,wand.ypoints,wand.npoints,Roi.POLYGON);
 					imp.setRoi(wandRoi);
 					ImageStatistics is = imp.getStatistics(AREA);
-					if (is.area >= SimplePTA.lowersize)
+					if (is.area / cal.pixelHeight / cal.pixelHeight >= SimplePTA.lowersize) // is.area must be converted to pixel
 						templist.add(to.detectObject());	// if the objects size is larger than lowersize value, add it as candidate
 					// register mask data
 					for(int mx = sx, bx = 0;mx<ex;mx++, bx++) {
