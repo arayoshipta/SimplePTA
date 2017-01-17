@@ -160,6 +160,12 @@ public class TrackObject extends Thread implements Measurements{
 			IJ.log("1. Last frame");
 			return false;
 		}
+		// reach image bound
+		if (cp.tx / cal.pixelWidth - roisize / 2 < 0) {IJ.log("3. Reach image bound");return false;} // image left
+		if (cp.ty / cal.pixelHeight - roisize / 2 < 0) {IJ.log("3. Reach image bound");return false;} // image top
+		if (cp.tx / cal.pixelWidth + roisize / 2 > imp.getWidth()) {IJ.log("3. Reach image bound");return false;} // image right
+		if (cp.ty / cal.pixelHeight + roisize / 2 > imp.getHeight()) {IJ.log("3. Reach image bound");return false;} // image bottom
+		
 		imp.setT(imp.getFrame() + 1); // move to next frame
 		ImageProcessor ip = imp.getProcessor();
 		FloatProcessor fip = ip.convertToFloatProcessor();

@@ -69,7 +69,7 @@ public class MainWindow extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.imp = _imp;
 		
-		setTitle("Simple PTA ver.0.7.2");
+		setTitle("Simple PTA ver.0.7.4");
 		setResizable(false);
 		getContentPane().setLayout(new GridLayout(3, 1, 0, 0));
 		

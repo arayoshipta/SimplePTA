@@ -36,7 +36,8 @@ public class CalcMSD {
 						while((j + l) < n) {
 							TrackPoint sp = pointlist.get(j + l);
 							if(sp.frame == fp.frame + k) {
-								len += ((sp.tx - fp.tx) * (sp.tx - fp.tx) + (sp.ty - fp.ty) * (sp.ty - fp.ty));
+								len += cal.pixelWidth * cal.pixelWidth *((sp.tx - fp.tx) * (sp.tx - fp.tx)
+									+ cal.pixelHeight * cal.pixelHeight *(sp.ty - fp.ty) * (sp.ty - fp.ty));
 								cnt++;
 								break;
 							}

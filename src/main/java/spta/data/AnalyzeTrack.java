@@ -44,6 +44,7 @@ public class AnalyzeTrack {
 		
 		double frameint;
 		frameint = cal.frameInterval == 0?1:cal.frameInterval;
+		IJ.log("cal.frameinterval=" + frameint);
 		
 		// calculate track parameters
 		this.startframe = track.get(0).frame;
@@ -84,8 +85,8 @@ public class AnalyzeTrack {
 		aveVel = 0;
 		for(int i = 1, j = 0;i < framelength; i++, j++) {
 			double length;
-			length =  (track.get(j).tx - track.get(i).tx) * (track.get(j).tx - track.get(i).tx);
-			length += (track.get(j).ty - track.get(i).ty) * (track.get(j).ty - track.get(i).ty);
+			length =  cal.pixelWidth * cal.pixelWidth * (track.get(j).tx - track.get(i).tx) * (track.get(j).tx - track.get(i).tx);
+			length += cal.pixelHeight * cal.pixelHeight * (track.get(j).ty - track.get(i).ty) * (track.get(j).ty - track.get(i).ty);
 			length = Math.sqrt(length);
 			runLen += length;
 			timeseriesm[j] = (i + track.get(0).frame) * frameint; 
