@@ -76,17 +76,17 @@ public class AnalyzeTrack {
 			timeseries[i] = (i + track.get(0).frame) * frameint;
 			intensities[i] = track.get(i).mean;
 			aveInt += track.get(i).mean;
-			xtrack[i] = track.get(i).tx * cal.pixelWidth;
-			ytrack[i] = track.get(i).ty * cal.pixelHeight;
-			objarea[i] = track.get(i).area * cal.pixelHeight * cal.pixelWidth;
+			xtrack[i] = track.get(i).tx;
+			ytrack[i] = track.get(i).ty;
+			objarea[i] = track.get(i).area;
 		}
 		aveInt /= framelength; 
 		runLen = 0;
 		aveVel = 0;
 		for(int i = 1, j = 0;i < framelength; i++, j++) {
 			double length;
-			length =  cal.pixelWidth * cal.pixelWidth * (track.get(j).tx - track.get(i).tx) * (track.get(j).tx - track.get(i).tx);
-			length += cal.pixelHeight * cal.pixelHeight * (track.get(j).ty - track.get(i).ty) * (track.get(j).ty - track.get(i).ty);
+			length = (track.get(j).tx - track.get(i).tx) * (track.get(j).tx - track.get(i).tx);
+			length += (track.get(j).ty - track.get(i).ty) * (track.get(j).ty - track.get(i).ty);
 			length = Math.sqrt(length);
 			runLen += length;
 			timeseriesm[j] = (i + track.get(0).frame) * frameint; 
