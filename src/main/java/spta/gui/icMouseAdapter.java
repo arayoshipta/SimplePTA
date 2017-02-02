@@ -16,7 +16,7 @@ import ij.process.*;
  * @author araiyoshiyuki
  *
  */
-public class icMouseAdapter extends MouseAdapter implements MouseListener, Measurements {
+public class icMouseAdapter extends MouseAdapter implements Measurements {
 	
 	public ImagePlus imp;
 	public double lt, ut; // lower and upper limit of Threshold values
