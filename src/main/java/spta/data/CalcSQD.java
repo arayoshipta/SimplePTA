@@ -5,13 +5,15 @@ import ij.measure.Calibration;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * Calculation of square displacements
+ */
+public class CalcSQD {
 
-public class CalcMSD {
-
-	private ArrayList<Double> msdList;
+	private ArrayList<Double> sqdList;
 	private ArrayList<Double> dframe;
 
-	public CalcMSD(final List<TrackPoint> pointlist, final int leastLength, Calibration cal) {
+	public CalcSQD(final List<TrackPoint> pointlist, final int leastLength, Calibration cal) {
 		try {
 			if (pointlist.size()<leastLength) 
 				return;
@@ -22,7 +24,7 @@ public class CalcMSD {
 			pointlist.get(pointlist.size() - 1).frame - pointlist.get(0).frame:calcFrameLen;
 			calcFrameLen = calcFrameLen<3?3:calcFrameLen;
 
-			msdList = new ArrayList<Double>(0);
+			sqdList = new ArrayList<Double>(0);
 			dframe = new ArrayList<Double>(0);
 
 			int n = pointlist.size();
@@ -45,7 +47,7 @@ public class CalcMSD {
 						}
 					}
 					if(cnt != 0) {
-						msdList.add(new Double(len / cnt));
+						sqdList.add(new Double(len / cnt));
 						dframe.add(new Double(k * frameint));
 					}
 			}
@@ -53,11 +55,11 @@ public class CalcMSD {
 			IJ.log("calcMsd:" + e.toString());
 		}
 	}
-	public double[] getMsdList() {
-		double[] retd = new double[msdList.size()];
+	public double[] getSqdList() {
+		double[] retd = new double[sqdList.size()];
 		int i=0;
 		try {
-			for(Double dval:msdList) {
+			for(Double dval:sqdList) {
 				retd[i] = dval.doubleValue();
 				i++;
 			}

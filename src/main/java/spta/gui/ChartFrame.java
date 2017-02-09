@@ -32,12 +32,12 @@ import java.util.List;
 public class ChartFrame extends JFrame {
 	private ImagePlus imp;
 	private Calibration cal;
-	public ChartPanel xypanel, intpanel, msdpanel, velpanel, areapanel, costpanel;
+	public ChartPanel xypanel, intpanel, sqdpanel, velpanel, areapanel, costpanel;
 	public XYPlot xyXYPlot, xyIntPlot, xyAreaPlot, xyCosTPlot, xyVelPlot;
 	public ChartFrame chartframe;
 	public List<TrackPoint> track;
 	
-	private double[] x, y, intensities, timeseries, timeseriesm, timeseriesc, objarea, cost, velocities, msd, msdlag;
+	private double[] x, y, intensities, timeseries, timeseriesm, timeseriesc, objarea, cost, velocities, sqd, sqdlag;
 	
 	public ChartFrame(ImagePlus imp, List<TrackPoint> track) {
 		this.imp = imp;
@@ -46,7 +46,7 @@ public class ChartFrame extends JFrame {
 				
 		getContentPane().setLayout(new GridLayout(3, 2, 0, 0));
 		// (0,0) = xy-chart, (0,1) = Intensity, 
-		// (1,0) = MSD, (1,1) = Velocity
+		// (1,0) = sqd, (1,1) = Velocity
 		// (2,0) = area, (2,1) = cost
 		setBounds(500, 10, 500, 500);
 		setTitle("Trajectories");
@@ -65,8 +65,8 @@ public class ChartFrame extends JFrame {
 		this.timeseriesc = at.timeseriesc;
 		this.cost = at.cost;
 		this.velocities = at.velocities;
-		this.msd = at.msd;
-		this.msdlag = at.msdlag;
+		this.sqd = at.sqd;
+		this.sqdlag = at.sqdlag;
 	}
 	
 	public void drawTrajectory(List<TrackPoint> track2) {
@@ -74,14 +74,14 @@ public class ChartFrame extends JFrame {
 		
 		DefaultXYDataset xyset = new DefaultXYDataset();
 		DefaultXYDataset intset = new DefaultXYDataset();
-		DefaultXYDataset msdset = new DefaultXYDataset();
+		DefaultXYDataset sqdset = new DefaultXYDataset();
 		DefaultXYDataset velset = new DefaultXYDataset();
 		DefaultXYDataset areaset = new DefaultXYDataset();
 		DefaultXYDataset costset = new DefaultXYDataset();
 
 		xyset.addSeries("xy", new double[][]{x, y});
 		intset.addSeries("Intensities", new double[][]{timeseries, intensities});
-		msdset.addSeries("msd", new double[][]{msdlag, msd});
+		sqdset.addSeries("sqd", new double[][]{sqdlag, sqd});
 		velset.addSeries("Velocities", new double[][]{timeseriesm, velocities});
 		areaset.addSeries("Area", new double[][]{timeseries, objarea});
 		costset.addSeries("Cos-Theta", new double[][]{timeseriesc, cost});
@@ -92,9 +92,9 @@ public class ChartFrame extends JFrame {
 		JFreeChart intchart = 
 				ChartFactory.createXYLineChart("Intensity", cal.getTimeUnit(), "Intensity",
 						intset, PlotOrientation.VERTICAL, false, true, false);
-		JFreeChart msdchart = 
-				ChartFactory.createXYLineChart("MSD", "delta-x [" + cal.getTimeUnit() + "]",
-						"MSD [" + cal.getUnit() + "^2]", msdset, PlotOrientation.VERTICAL,
+		JFreeChart sqdchart = 
+				ChartFactory.createXYLineChart("Square Displacements", "delta-x [" + cal.getTimeUnit() + "]",
+						"Square Displacements [" + cal.getUnit() + "^2]", sqdset, PlotOrientation.VERTICAL,
 						false, true, false);
 		JFreeChart velchart = 
 				ChartFactory.createXYLineChart("Velocity", cal.getTimeUnit(), "Velocity [" + cal.getUnit() + " / " + cal.getTimeUnit() + "]",
@@ -108,20 +108,20 @@ public class ChartFrame extends JFrame {
 		if(xypanel == null) {
 			xypanel = new ChartPanel(xychart);
 			intpanel = new ChartPanel(intchart);
-			msdpanel = new ChartPanel(msdchart);
+			sqdpanel = new ChartPanel(sqdchart);
 			velpanel = new ChartPanel(velchart);
 			areapanel = new ChartPanel(areachart);
 			costpanel = new ChartPanel(costchart);
 			this.getContentPane().add(xypanel);
 			this.getContentPane().add(intpanel);
-			this.getContentPane().add(msdpanel);
+			this.getContentPane().add(sqdpanel);
 			this.getContentPane().add(velpanel);
 			this.getContentPane().add(areapanel);
 			this.getContentPane().add(costpanel);
 		} else {
 			xypanel.setChart(xychart);
 			intpanel.setChart(intchart);
-			msdpanel.setChart(msdchart);
+			sqdpanel.setChart(sqdchart);
 			velpanel.setChart(velchart);
 			areapanel.setChart(areachart);
 			costpanel.setChart(costchart);

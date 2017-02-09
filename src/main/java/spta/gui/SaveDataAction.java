@@ -70,7 +70,7 @@ public class SaveDataAction extends AbstractAction {
 				List<List<TrackPoint>> tracklist = rdt.tracklist;
 				JTable jt = rdt.jt;
 				
-				pw.println("Point Frame x y sx sy intensity offset area itteration velocity msd cost");
+				pw.println("Point Frame x y sx sy intensity offset area itteration velocity sqd cost");
 				for(int index = 0; index < tracklist.size(); index++) {
 					tmpPlist = tracklist.get(jt.convertRowIndexToModel(index));
 					writePointData(tracklist, tmpPlist, pw);
@@ -91,7 +91,7 @@ public class SaveDataAction extends AbstractAction {
 				List<List<TrackPoint>> tracklist = rdt.tracklist;
 				int[] selectedlist = rdt.selectedlist;
 
-				pw.println("Point Frame x y sx sy intensity offset area itteration velocity msd cost");
+				pw.println("Point Frame x y sx sy intensity offset area itteration velocity sqd cost");
 				for(int index = 0; index < selectedlist.length; index++) {
 					tmpPlist = tracklist.get(selectedlist[index]);
 					writePointData(tracklist, tmpPlist, pw);
@@ -112,7 +112,7 @@ public class SaveDataAction extends AbstractAction {
 				List<List<TrackPoint>> tracklist = rdt.tracklist;
 				JTable jt = rdt.jt;
 
-				pw.println("Point Frame x y sx sy intensity offset area itteration velocity msd cost");
+				pw.println("Point Frame x y sx sy intensity offset area itteration velocity sqd cost");
 				for(int index = 0; index < tracklist.size(); index++) {
 					if((Boolean) jt.getValueAt(index, 7) == Boolean.TRUE) {
 						IJ.log("checked data index is = "+jt.convertRowIndexToModel(index));
@@ -169,19 +169,19 @@ public class SaveDataAction extends AbstractAction {
 		int frame = 0;
 		int cnt = 0;
 		int pnum = plist.indexOf(tmpPlist);
-		String vel = "--", msd = "--", cost = "--";
+		String vel = "--", sqd = "--", cost = "--";
 		AnalyzeTrack at = new AnalyzeTrack(imp, tmpPlist);
 		for(TrackPoint tmpP: tmpPlist) {
 			if (cnt > 0) {
 				vel = String.valueOf(at.velocities[cnt - 1]);
-				msd = String.valueOf(at.msd[cnt - 1]);
+				sqd = String.valueOf(at.sqd[cnt - 1]);
 			}
 			if (cnt > 1)
 				cost = String.valueOf(at.cost[cnt - 2]);
 			pw.println(String.format("%d %d %f %f %f %f %f %f %f %d %s %s %s", 
 					pnum, tmpP.frame, tmpP.tx, tmpP.ty, tmpP.sx, tmpP.sy,
 					tmpP.mean, tmpP.offset, tmpP.area, tmpP.ite,  
-					vel, msd, cost));
+					vel, sqd, cost));
 			frame = tmpP.frame;
 			cnt++;
 		}

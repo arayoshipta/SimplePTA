@@ -34,8 +34,8 @@ public class AnalyzeTrack {
 	public double[] velocities;
 	public double[] cost;
 	public double[] objarea;
-	public double[] msd;
-	public double[] msdlag;
+	public double[] sqd;
+	public double[] sqdlag;
 	
 	public AnalyzeTrack(ImagePlus imp, List<TrackPoint> track) {
 		this.imp = imp;
@@ -101,12 +101,12 @@ public class AnalyzeTrack {
 		}
 		aveVel /= framelength;
 		if (track.size() > 2) {
-			CalcMSD cm = new CalcMSD(track, 2, imp.getCalibration());
-			msd = cm.getMsdList(); // cal MSD if the length of track is more than 5
-			msdlag = cm.getDFrame();
+			CalcSQD cm = new CalcSQD(track, 2, imp.getCalibration());
+			sqd = cm.getSqdList(); // cal sqd if the length of track is more than 5
+			sqdlag = cm.getDFrame();
 		} else {
-			msd = new double[]{0}; // return 0 value 
-			msdlag = new double[]{0};
+			sqd = new double[]{0}; // return 0 value 
+			sqdlag = new double[]{0};
 		}
 	}
 }
