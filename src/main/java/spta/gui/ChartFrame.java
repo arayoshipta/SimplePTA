@@ -93,8 +93,8 @@ public class ChartFrame extends JFrame {
 				ChartFactory.createXYLineChart("Intensity", cal.getTimeUnit(), "Intensity",
 						intset, PlotOrientation.VERTICAL, false, true, false);
 		JFreeChart sqdchart = 
-				ChartFactory.createXYLineChart("Square Displacements", "delta-x [" + cal.getTimeUnit() + "]",
-						"Square Displacements [" + cal.getUnit() + "^2]", sqdset, PlotOrientation.VERTICAL,
+				ChartFactory.createXYLineChart("Square Disp.", "delta-x [" + cal.getTimeUnit() + "]",
+						"Square Disp. [" + cal.getUnit() + "^2]", sqdset, PlotOrientation.VERTICAL,
 						false, true, false);
 		JFreeChart velchart = 
 				ChartFactory.createXYLineChart("Velocity", cal.getTimeUnit(), "Velocity [" + cal.getUnit() + " / " + cal.getTimeUnit() + "]",
