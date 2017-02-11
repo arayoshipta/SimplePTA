@@ -60,17 +60,16 @@ public class SimplePTA extends PlugInFrame {
 		}
 		frame = this;
 
-		// panel coordinate
-
 		imp = WindowManager.getCurrentImage();
-		// open the Threshold Adjuster
-		ThresholdAdjuster ta = new ThresholdAdjuster();
-		ta.setEnabled(true);
-		IJ.setAutoThreshold(imp, "Triangle");
-		ta.imageUpdated(imp);
 		
 		// if the image is already opened
 		if (imp != null) {
+			// open the Threshold Adjuster
+			ThresholdAdjuster ta = new ThresholdAdjuster();
+			ta.setEnabled(true);
+			IJ.setAutoThreshold(imp, "Triangle");
+			ta.imageUpdated(imp);
+			
 			ImageProcessor ip = imp.getProcessor();
 			mw = new MainWindow(imp, tracklist);
 			mw.setVisible(true);
